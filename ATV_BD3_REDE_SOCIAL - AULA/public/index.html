@@ -40,7 +40,7 @@
 
                 <form name="frm_post" id="frm_post">
 
-                    <input type="text" name="username" id="username" placeholder="TITULO DO POST">
+                    <input type="text" name="titulo" id="titulo" placeholder="TITULO DO POST">
                     <br />
                     <input multiple type="text" name="message" id="message"  placeholder="TEXTO DO POST">
                     <br />
@@ -58,11 +58,11 @@
     <script>
         const socket = io('http://localhost:3000')
          function renderMessage(message){
-           $('.messages').append('<div class="message"><strong>'+message.usuario + message.data_hora + '</strong>: '+message.message) 
+           $('.posts_container').append('<div class="posts_container"><strong>'+message.titulo + '</strong>'+ message.data_hora +message.message) 
         }
 
         //Recupera as mensagens anteriores de todos os usuarios e exibe no navegador:
-        socket.on('previousMessage', function(messages){
+        socket.on('posts_container', function(messages){
             for(message of messages){
                 renderMessage(message);
             }
@@ -79,10 +79,10 @@
             // alert('DEU CERTO!!');
 
             //Recupera os dados de usuario e mensagem:
-            var usuario = $('input[name=username]').val();
+            var titulo = $('input[name=titulo]').val();
             var mensagem = $('input[name=message]').val();
 
-            console.log('USUÁRIO' + usuario)
+            console.log('titulo' + titulo)
             console.log('MENSAGEM' + mensagem)
 
             //data e hora de envio da mensagem:
@@ -91,7 +91,7 @@
 
             //Criação do objeto JSON da mensagem
             var messageObject = {
-                usuario: usuario,
+                titulo: titulo,
                 data_hora: data_hora_msg,
                 message: mensagem
             }
@@ -102,9 +102,8 @@
             console.log('JSON' + JSON.stringify(messageObject))
         });
     </script>
-</body>
 
-    <script>
+     <script>
 
         /***** ABERTURA/FECHAMENTO DO FORMUÁRIO MODAL *****/
         let btn = document.getElementById('btn_post');
@@ -123,5 +122,5 @@
         });
 
     </script>
-
+</body>
 </html>

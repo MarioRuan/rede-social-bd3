@@ -35,16 +35,15 @@ function conectDB(){
 }
 
 conectDB();
-let Message = mongoose.model('Message', {usuario:String,data_hora:String,message:String})
+let Post = mongoose.model('Post', {titulo:String,data_hora:String,message:String})
 // LÓDICA DO SOCKET.IO - ENVIO DE PROPAGAÇÃO DE MENSAGENS
 
 //array que simula o branco de dados:
-let messages = [];
+let posts = []
 
-
-Message.find({}).then(docs=>{
-    messages = docs
-}).catch(error=>{
+Post.find({}).then(docs=>
+    posts = docs
+).catch(error=>{
     console.log(error)
 });
 
@@ -56,24 +55,24 @@ io.on('connection', socket=>{
     console.log('NOVO USUÁRIO CONECTADO: ' + socket.id)
 
     //Recupera e mantém (exibe) as mensagens entre o front e o back:
-    socket.emit('posts_container', messages);
+    socket.emit('posts_container', posts);
 
     //Lógica de chat quando uma mensagem é enviada:
     socket.on('sendMessage', data=>{
 
-        let message = new Message(data)
+        let post = new Post(data)
 
-        message.save().then(
+        post.save().then(
             socket.broadcast.emit('receivedMessage', data)
         ).catch(error=>{
             console.log(error)
         });
        
 
-        console.log('QTD MENSAGENS: '+messages.length)
+        console.log('QTD posts: '+posts.length)
     });
 
-    console.log('QTD MENSAGENS: '+messages.length)
+    console.log('QTD posts: '+posts.length)
 })
 
 server.listen(3000, ()=>{console.log("chat rodando em http://localhost:3000")});
